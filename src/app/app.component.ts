@@ -3,10 +3,15 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <app-header></app-header>
+    <div class="site-wrapper">
+      <app-header></app-header>
+      <div class="main">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   `,
   styles: []
 })
 export class AppComponent {
-  
+
 }
