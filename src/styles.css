@@ -92,6 +92,10 @@ a {
   justify-content: space-between;
 }
 
+.title {
+  margin: 0 auto;
+}
+
 .container {
   max-width: 1440px;
   margin: 0 auto;
