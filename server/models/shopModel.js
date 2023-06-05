@@ -12,11 +12,6 @@ const productSchema = new mongoose.Schema({
 });
 
 const shopSchema = new mongoose.Schema({
-  shop_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Shops",
-  },
   name: {
     type: String,
     required: [true, "Please add the name shop"],
