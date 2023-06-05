@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { CartService } from "src/app/services/cart.service";
 import { ShopService } from "src/app/services/shop.service";
 import { Product, Shop } from "src/app/Shop";
 
@@ -10,10 +11,13 @@ export class HomeComponent implements OnInit {
   shops: Shop[] = [];
   error: string = "";
   products: Product[] = [];
-  activeProduct = 0
-  activeShop = ''
+  activeProduct = 0;
+  activeShop = "";
 
-  constructor(private shopService: ShopService) {}
+  constructor(
+    private shopService: ShopService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     this.getAllShops();
@@ -37,5 +41,9 @@ export class HomeComponent implements OnInit {
   onShowProducts(shop: Shop): void {
     this.products = shop.products;
     this.activeShop = shop.name;
+  }
+
+  onAddToCart(product: Product): void {
+    this.cartService.addToCart(product);
   }
 }

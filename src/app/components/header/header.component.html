@@ -12,7 +12,9 @@
         </ul>
       </nav>
       <h1 class="title">Delivery app</h1>
-
+      <div class="cart-wrapper" *ngIf="cartItemCount" >
+        Count cart items: {{ cartItemCount }}
+      </div>
     </div>
   </div>
 </header>
