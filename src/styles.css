@@ -22,6 +22,7 @@ body {
   font-family: sans-serif;
   font-size: 1rem;
   background-color: var(--background);
+  overflow-y: hidden;
 }
 
 .site-wrapper {
@@ -64,7 +65,7 @@ a {
 }
 
 .btn:focus {
-  box-shadow: 0 0 0 0.2rem rgba(39,36,76,.5);
+  box-shadow: 0 0 0 0.2rem rgba(107, 98, 209, 0.5);
 }
 
 .header {
@@ -185,4 +186,8 @@ a {
 
 .m-t-20 {
   margin-top: 20px;
+}
+
+.price-wrapper {
+  justify-content: flex-end;
 }
