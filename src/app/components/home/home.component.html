@@ -1,12 +1,9 @@
 <div class="container">
-  <div class="main-wrapper">
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="!error" class="main-wrapper">
     <section class="shops">
       <h2 class="title-section">Shops:</h2>
-      <button class="btn"> McDonald's </button>
-      <button class="btn"> Subway </button>
-      <button class="btn"> Starbucks </button>
-      <button class="btn"> KFC </button>
-      <button class="btn"> Burger King </button>
+      <button *ngFor="let shop of shops" class="btn"> {{ shop.name }} </button>
     </section>
     <section class="products">
       <div class="cart-product">
