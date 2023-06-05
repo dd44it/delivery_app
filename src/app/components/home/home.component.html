@@ -3,35 +3,18 @@
   <div *ngIf="!error" class="main-wrapper">
     <section class="shops">
       <h2 class="title-section">Shops:</h2>
-      <button *ngFor="let shop of shops" class="btn"> {{ shop.name }} </button>
+      <button *ngFor="let shop of shops" class="btn" (click)="onShowProducts(shop)" 
+      [class.active]="shop.name === activeShop"> {{ shop.name }} </button>
     </section>
     <section class="products">
-      <div class="cart-product">
+      <div *ngFor="let product of products" class="cart-product">
         <div class="cart-image">
-          <img class="image" src="https://placehold.co/400x500" alt="">
+          <img class="image" src="https://placehold.co/400x500" alt="product-image">
         </div>
-        <h4 class="title">Burger</h4>
-        <button class="btn">add to cart</button>
-      </div>
-      <div class="cart-product">
-        <div class="cart-image">
-          <img class="image" src="https://placehold.co/400x500" alt="">
+        <div class="row space-between">
+          <h4 class="title">{{ product.name }}</h4>
+          <h5 class="price"> $ {{ product.price }}</h5>
         </div>
-        <h4 class="title">Burger</h4>
-        <button class="btn">add to cart</button>
-      </div>
-      <div class="cart-product">
-        <div class="cart-image">
-          <img class="image" src="https://placehold.co/400x500" alt="">
-        </div>
-        <h4 class="title">Burger</h4>
-        <button class="btn">add to cart</button>
-      </div>
-      <div class="cart-product">
-        <div class="cart-image">
-          <img class="image" src="https://placehold.co/400x500" alt="">
-        </div>
-        <h4 class="title">Burger</h4>
         <button class="btn">add to cart</button>
       </div>
     </section>
