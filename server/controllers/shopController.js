@@ -5,7 +5,6 @@ const { Shops } = require("../models/shopModel");
 // @route GET /api/shops
 // @access public
 const getShops = asyncHandler(async (req, res) => {
-  console.log("here");
   const shops = await Shops.find();
   res.status(200).json(shops);
 });
