@@ -6,6 +6,8 @@ const { Shops } = require("../models/shopModel");
 // @access public
 const getShops = asyncHandler(async (req, res) => {
   const shops = await Shops.find();
+  res.set('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'application/json');
   res.status(200).json(shops);
 });
 
