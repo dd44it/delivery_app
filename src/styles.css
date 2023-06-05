@@ -68,6 +68,13 @@ a {
   box-shadow: 0 0 0 0.2rem rgba(107, 98, 209, 0.5);
 }
 
+.active {
+  background: var(--secondaryColor);
+  color: var(--primaryColor);
+  border: 1px solid var(--primaryColor);
+  box-shadow: 0 0 0 0.2rem rgba(107, 98, 209, 0.5);
+}
+
 .header {
   background: var(--accentColor);
   color: var(--secondaryColor);
@@ -80,7 +87,8 @@ a {
   align-items: center;
 }
 
-.header-wrapper {
+.header-wrapper,
+.space-between {
   justify-content: space-between;
 }
 
