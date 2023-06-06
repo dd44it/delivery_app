@@ -106,7 +106,8 @@ a {
   gap: 20px;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.link {
   text-decoration: underline;
 }
 
@@ -183,7 +184,7 @@ a {
   padding: 20px;
   border: 1px solid;
   border-radius: 6px;
-  height: 80vh;
+  max-height: 70vh;
   overflow-y: auto;
 }
 
