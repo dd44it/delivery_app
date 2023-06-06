@@ -21,8 +21,13 @@
       </form>
     </div>
     <div class="cart-data">
-      <div class="cart">
-        
+      <div class="cart" *ngFor="let product of products">
+        <img src="https://placehold.co/300x150" alt="">
+        <div class="column">
+          <div class="title-cart">{{ product.name }}</div>
+          <div class="price-cart">Price: {{ product.price }}</div>
+          <input type="number" class="input" step="any" min="0" value="{{ product.count }}">
+        </div>
       </div>
     </div>
   </div>
