@@ -8,6 +8,7 @@ const port = 5000;
 app.use(express.json());
 loadDefaultData();
 app.use("/api/shops", require("./routes/shopRoutes"));
+app.use("/api/order", require("./routes/orderRoutes"));
 app.use(errorHandler);
 
 app.listen(port, () => {
