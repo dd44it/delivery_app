@@ -6,6 +6,8 @@ export interface Shop {
 }
 
 export interface Product {
+  _id: string;
   name: string;
   price: number;
+  count: number;
 }
