@@ -47,4 +47,11 @@ export class CartService {
 
     return this.http.post<any>(this.orderUrl, data, httpOptions)
   }
+
+  resetCart(): void {
+    const resetProperty = 0
+    this.cart.length = resetProperty;
+    this.cartItemCount.next(resetProperty);
+  }
+  
 }
