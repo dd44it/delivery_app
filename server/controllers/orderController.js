@@ -5,8 +5,8 @@ const { Order } = require("../models/orderModel");
 // @route POST /api/order
 // @access public
 const orderProduct = asyncHandler(async (req, res) => {
-  const { name, email, phone, address, products } = req.body;
-  if (!name || !email || !phone || !address || !products.length) {
+  const { name, email, phone, address, products, finalPrice } = req.body;
+  if (!name || !email || !phone || !address || !products.length || !finalPrice) {
     res.status(400);
     throw new Error("All fields are mandatory");
   }
@@ -16,6 +16,7 @@ const orderProduct = asyncHandler(async (req, res) => {
     phone,
     address,
     products,
+    finalPrice
   });
   res.set("Access-Control-Allow-Origin", "*");
   res.setHeader("Content-Type", "application/json");
