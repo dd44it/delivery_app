@@ -1,38 +1,39 @@
 <div class="container">
-  <div class="cart-wrapper">
-    <div class="user-data-form">
-      <form class="form" >
+  <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+
+    <div class="cart-wrapper">
+      <div class="user-data-form form">
         <div class="form-item">
           <label for="name">Name</label>
-          <input type="text" id="name" class="input">
+          <input type="text" id="name" class="input" formControlName="name" required >
         </div>
         <div class="form-item">
-          <label for="name">Email</label>
-          <input type="email" id="name" class="input">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="input" formControlName="email" required >
         </div>
         <div class="form-item">
-          <label for="name">Phone</label>
-          <input type="tel" id="name" class="input">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" class="input" formControlName="phone" required >
         </div>
         <div class="form-item">
-          <label for="name">Address</label>
-          <input type="text" id="name" class="input">
+          <label for="address">Address</label>
+          <input type="text" id="address" class="input" formControlName="address" required >
         </div>
-      </form>
-    </div>
-    <div class="cart-data">
-      <div class="cart" *ngFor="let product of products">
-        <img src="https://placehold.co/300x150" alt="">
-        <div class="column">
-          <div class="title-cart">{{ product.name }}</div>
-          <div class="price-cart">Price: {{ product.price }}</div>
-          <input type="number" class="input" step="any" min="0" value="{{ product.count }}">
+      </div>
+      <div class="cart-data">
+        <div class="cart" *ngFor="let product of products" >
+          <img src="https://placehold.co/300x150" alt="">
+          <div class="column">
+            <div class="title-cart" id="titleProduct" >{{ product.name }}</div>
+            <div class="price-cart" id="priceProduct" >Price: {{ product.price }}</div>
+            <input type="number" id="countProduct" class="input" step="any" min="0" value="{{ product.count }}" >
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row m-t-20 price-wrapper">
-    <h3>Total price: </h3>
-    <button class="btn">Submit</button>
-  </div>
+    <div class="row m-t-20 price-wrapper">
+      <h3>Total price: </h3>
+      <button class="btn" type="submit">Submit</button>
+    </div>
+  </form>
 </div>
