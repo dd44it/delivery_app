@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { BehaviorSubject } from "rxjs";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import { BehaviorSubject, Observable } from "rxjs";
 import { Product } from "../Shop";
 
 @Injectable({
@@ -37,23 +37,14 @@ export class CartService {
     return this.cart;
   }
 
-  sendDataToDB(data: any): void {
+    sendDataToDB(data: any): Observable<HttpResponse<any>> {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
       }),
+      observe: 'response' as 'response',
     };
 
-    this.http.post<any>(this.orderUrl, data, httpOptions).subscribe(
-      (response) => {
-        console.log("Data sent to MongoDB successfully:", response);
-        // Perform any additional actions after successful data submission
-        // return
-      },
-      (error) => {
-        console.error("Error occurred while sending data to MongoDB:", error);
-        // Handle any errors that occurred during data submission
-      }
-    );
+    return this.http.post<any>(this.orderUrl, data, httpOptions)
   }
 }

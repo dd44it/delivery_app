@@ -9,6 +9,7 @@ import { CartService } from "src/app/services/cart.service";
 })
 export class CartComponent implements OnInit {
   products: Product[] = [];
+  resultResponse = '';
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -29,7 +30,7 @@ export class CartComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const finalPrice = this.products?.map(item => item.count * item.price).reduce( (prevVal, curVal) => prevVal + curVal, 0);
+    const finalPrice = this.products?.map((item) => item.count * item.price).reduce((prevVal, curVal) => prevVal + curVal, 0);
     const formData = {
       ...this.checkoutForm.value,
       products: this.products.map((product: Product) => {
@@ -44,6 +45,17 @@ export class CartComponent implements OnInit {
     };
     console.warn("Your order has been submitted", formData);
 
-    this.cartService.sendDataToDB(formData);
+    this.cartService.sendDataToDB(formData).subscribe(
+      (response) => {
+        this.resultResponse = "Data sent successfully. Wait for the operator to contact you in a few minutes";
+      },
+      (error) => {
+        console.error(
+          "Error occurred while sending data to MongoDB. Status code:",
+          error
+        );
+        this.resultResponse = `Error occurred while sending data. Error message is: ${error.error.message}. Try send data later`;
+      }
+    );
   }
 }
