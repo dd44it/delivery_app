@@ -203,3 +203,17 @@ a {
 .price-wrapper {
   justify-content: flex-end;
 }
+
+.cart {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.cart .column {
+  text-align: center;
+}
