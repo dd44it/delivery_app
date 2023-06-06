@@ -9,7 +9,8 @@ import { CartService } from "src/app/services/cart.service";
 })
 export class CartComponent implements OnInit {
   products: Product[] = [];
-  resultResponse = '';
+  resultResponse = "";
+  finalPrice = 0;
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -27,10 +28,10 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.products = this.cartService.getCart();
+    this.updateFinalPrice();
   }
 
   onSubmit(): void {
-    const finalPrice = this.products?.map((item) => item.count * item.price).reduce((prevVal, curVal) => prevVal + curVal, 0);
     const formData = {
       ...this.checkoutForm.value,
       products: this.products.map((product: Product) => {
@@ -39,15 +40,18 @@ export class CartComponent implements OnInit {
           name: product.name,
           price: product.price,
           count: product.count,
+          shop: product.shop,
         };
       }),
-      finalPrice,
+      finalPrice: this.finalPrice,
     };
     console.warn("Your order has been submitted", formData);
 
     this.cartService.sendDataToDB(formData).subscribe(
       (response) => {
-        this.resultResponse = "Data sent successfully. Wait for the operator to contact you in a few minutes";
+        this.resultResponse =
+          "Data sent successfully. Wait for the operator to contact you in a few minutes";
+          this.cartService.resetCart()
       },
       (error) => {
         console.error(
@@ -57,5 +61,22 @@ export class CartComponent implements OnInit {
         this.resultResponse = `Error occurred while sending data. Error message is: ${error.error.message}. Try send data later`;
       }
     );
+  }
+
+  onChangeCount(product: Product, element: any): void {
+    const countProduct = element.target.value;
+    const findProductIndex = this.products.findIndex(
+      (item) => item._id === product._id
+    );
+    if (findProductIndex !== -1) {
+      this.products[findProductIndex].count = countProduct;
+      this.updateFinalPrice();
+    }
+  }
+
+  updateFinalPrice(): void {
+    this.finalPrice = this.products
+      ?.map((product) => product.count * product.price)
+      .reduce((prevVal, curVal) => prevVal + curVal, 0);
   }
 }
