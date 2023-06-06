@@ -9,6 +9,14 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  count: {
+    type: Number,
+    required: true,
+  },
+  shop: {
+    type: String,
+    required: true,
+  },
 });
 
 const shopSchema = new mongoose.Schema({
