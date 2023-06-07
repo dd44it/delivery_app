@@ -27,7 +27,12 @@ export class CartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.products = this.cartService.getCart();
+    const localStorageCart = localStorage.getItem("cart");
+    if (localStorageCart) {
+      this.products = JSON.parse(localStorageCart);
+    } else {
+      this.products = this.cartService.getCart();
+    }
     this.updateFinalPrice();
   }
 
@@ -51,7 +56,7 @@ export class CartComponent implements OnInit {
       (response) => {
         this.resultResponse =
           "Data sent successfully. Wait for the operator to contact you in a few minutes";
-          this.cartService.resetCart();
+        this.cartService.resetCart();
       },
       (error) => {
         console.error(
@@ -70,21 +75,29 @@ export class CartComponent implements OnInit {
       (item) => item._id === product._id
     );
     if (findProductIndex !== -1) {
-      this.products[findProductIndex].count = countProduct;
+      this.products[findProductIndex].count = Number(countProduct);
       this.updateFinalPrice();
     }
   }
 
   updateFinalPrice(): void {
+    const countProduct = this.products.length && this.products.reduce((prevVal, curVal) => prevVal + curVal.count,0);
+    console.log("countProduct", countProduct);
     this.finalPrice = this.products
       ?.map((product) => product.count * product.price)
-      .map(product => product < 0 ? -1 * product : product)
+      .map((product) => (product < 0 ? -1 * product : product))
       .reduce((prevVal, curVal) => prevVal + curVal, 0);
+
+    this.cartService.setToLocalStorage("cart", JSON.stringify(this.products));
+    this.cartService.setToLocalStorage("count", countProduct.toString());
+    this.cartService.setCountCart(countProduct);
   }
 
   onRemoveProduct(product: Product): void {
-    const findProductIndex = this.products.findIndex(item => item._id === product._id);
-    if(findProductIndex !== -1){
+    const findProductIndex = this.products.findIndex(
+      (item) => item._id === product._id
+    );
+    if (findProductIndex !== -1) {
       this.products.splice(findProductIndex, 1);
       this.updateFinalPrice();
     }

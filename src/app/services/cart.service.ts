@@ -19,6 +19,14 @@ export class CartService {
 
   addToCart(product: Product): void {
     if (!product.count) product.count = 0;
+    const cartLocalStorage = localStorage.getItem("cart");
+    const countLocalStorage = localStorage.getItem("count");
+    if (cartLocalStorage) {
+      this.cart = JSON.parse(cartLocalStorage);
+    }
+    if (countLocalStorage) {
+      this.setCountCart(Number(countLocalStorage));
+    }
     const index = this.cart.findIndex((item) => item._id === product._id);
     if (index !== -1) {
       this.cart[index].count += 1;
@@ -30,28 +38,37 @@ export class CartService {
       (prevIt, currIt) => prevIt + currIt.count,
       0
     );
-    this.cartItemCount.next(sumProducts);
+    this.setCountCart(sumProducts);
+    this.setToLocalStorage("cart", JSON.stringify(this.cart));
+    this.setToLocalStorage("count", JSON.stringify(sumProducts));
   }
 
   getCart(): Product[] {
     return this.cart;
   }
 
-    sendDataToDB(data: any): Observable<HttpResponse<any>> {
+  sendDataToDB(data: any): Observable<HttpResponse<any>> {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
       }),
-      observe: 'response' as 'response',
+      observe: "response" as "response",
     };
 
-    return this.http.post<any>(this.orderUrl, data, httpOptions)
+    return this.http.post<any>(this.orderUrl, data, httpOptions);
   }
 
   resetCart(): void {
-    const resetProperty = 0
+    const resetProperty = 0;
     this.cart.length = resetProperty;
     this.cartItemCount.next(resetProperty);
   }
-  
+
+  setCountCart(value: number): void {
+    this.cartItemCount.next(value);
+  }
+
+  setToLocalStorage(key: string, value: string): void {
+    localStorage.setItem(key, value);
+  }
 }
