@@ -46,4 +46,9 @@ export class HomeComponent implements OnInit {
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product);
   }
+
+  onRemoveActiveShop(): void {
+    this.activeShop = "";
+    this.cartService.resetCart();
+  }
 }

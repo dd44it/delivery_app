@@ -62,6 +62,8 @@ export class CartService {
     const resetProperty = 0;
     this.cart.length = resetProperty;
     this.cartItemCount.next(resetProperty);
+    this.setToLocalStorage("cart", '');
+    this.setToLocalStorage("count", '');
   }
 
   setCountCart(value: number): void {

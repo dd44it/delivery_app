@@ -3,8 +3,13 @@
   <div *ngIf="!error" class="main-wrapper">
     <section class="shops">
       <h2 class="title-section">Shops:</h2>
-      <button *ngFor="let shop of shops" class="btn" (click)="onShowProducts(shop)" 
-      [class.active]="shop.name === activeShop"> {{ shop.name }} </button>
+      <h3 *ngIf="activeShop">
+        active shop: {{activeShop}}
+        <button class="btn-info" (click)="onRemoveActiveShop()">remove active shop</button>
+      </h3>
+      <button *ngFor="let shop of shops" class="btn" (click)="onShowProducts(shop)"
+        [class.active]="shop.name === activeShop"
+        [attr.disabled]="!activeShop || shop.name == activeShop ? null : shop.name !== activeShop ? true : '' "> {{ shop.name }} </button>
     </section>
     <section class="products">
       <div *ngFor="let product of products" class="cart-product">
