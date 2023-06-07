@@ -217,8 +217,15 @@ a {
   padding: 10px;
   margin-bottom: 10px;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .cart .column {
   text-align: center;
+}
+
+.button-remove {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }

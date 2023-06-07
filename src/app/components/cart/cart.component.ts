@@ -51,7 +51,7 @@ export class CartComponent implements OnInit {
       (response) => {
         this.resultResponse =
           "Data sent successfully. Wait for the operator to contact you in a few minutes";
-          this.cartService.resetCart()
+          this.cartService.resetCart();
       },
       (error) => {
         console.error(
@@ -59,6 +59,7 @@ export class CartComponent implements OnInit {
           error
         );
         this.resultResponse = `Error occurred while sending data. Error message is: ${error.error.message}. Try send data later`;
+        this.cartService.resetCart();
       }
     );
   }
@@ -79,5 +80,13 @@ export class CartComponent implements OnInit {
       ?.map((product) => product.count * product.price)
       .map(product => product < 0 ? -1 * product : product)
       .reduce((prevVal, curVal) => prevVal + curVal, 0);
+  }
+
+  onRemoveProduct(product: Product): void {
+    const findProductIndex = this.products.findIndex(item => item._id === product._id);
+    if(findProductIndex !== -1){
+      this.products.splice(findProductIndex, 1);
+      this.updateFinalPrice();
+    }
   }
 }

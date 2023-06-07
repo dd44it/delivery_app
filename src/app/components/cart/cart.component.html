@@ -24,6 +24,7 @@
       <div class="cart-data">
         <div *ngIf="!products.length"> Your cart is empty <a class="link" routerLink="/home">Start shopping</a> </div>
         <div class="cart" *ngFor="let product of products">
+          <button class="button-remove" (click)="onRemoveProduct(product)">Remove</button>
           <img src="https://placehold.co/300x150" alt="">
           <div class="column">
             <div class="title-shop" id="titleShop">Shop: {{ product.shop }}</div>
