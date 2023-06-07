@@ -77,6 +77,7 @@ export class CartComponent implements OnInit {
   updateFinalPrice(): void {
     this.finalPrice = this.products
       ?.map((product) => product.count * product.price)
+      .map(product => product < 0 ? -1 * product : product)
       .reduce((prevVal, curVal) => prevVal + curVal, 0);
   }
 }

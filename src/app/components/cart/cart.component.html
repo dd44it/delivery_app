@@ -3,7 +3,7 @@
   <form [formGroup]="checkoutForm" *ngIf="!resultResponse" (ngSubmit)="onSubmit()">
 
     <div class="cart-wrapper">
-      <div class="user-data-form form">
+      <div *ngIf="products.length" class="user-data-form form">
         <div class="form-item">
           <label for="name">Name</label>
           <input type="text" id="name" class="input" formControlName="name" required>
@@ -29,14 +29,14 @@
             <div class="title-shop" id="titleShop">Shop: {{ product.shop }}</div>
             <div class="title-cart" id="titleProduct">Item: {{ product.name }}</div>
             <div class="price-cart" id="priceProduct">Price: ${{ product.price }}</div>
-            <input (change)="onChangeCount(product, $event)" type="number" id="countProduct" class="input" step="any" min="0" value="{{ product.count }}">
+            <input (change)="onChangeCount(product, $event)" type="number" id="countProduct" class="input" step="any" min="1" value="{{ product.count }}">
           </div>
         </div>
       </div>
     </div>
     <div class="row m-t-20 price-wrapper">
       <h3 *ngIf="finalPrice">Total price: {{ finalPrice }} </h3>
-      <button class="btn" type="submit">Submit</button>
+      <button class="btn" type="submit" *ngIf="products.length && finalPrice">Submit</button>
     </div>
   </form>
 </div>
