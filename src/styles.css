@@ -201,9 +201,12 @@ a {
   gap: 20px;
 }
 
+.cart-wrapper > div {
+  flex: 0 1 50%;
+}
+
 .user-data-form,
 .cart-data {
-  flex: 0 1 50%;
   padding: 20px;
   border: 1px solid;
   border-radius: 6px;
@@ -217,6 +220,11 @@ a {
   gap: 15px;
 }
 
+.form-600 {
+  width: 600px;
+  margin: 0 auto;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -225,6 +233,10 @@ a {
 
 .m-t-20 {
   margin-top: 20px;
+}
+
+.m-b-20 {
+  margin-bottom: 20px;
 }
 
 .price-wrapper {
