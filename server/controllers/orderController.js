@@ -23,4 +23,17 @@ const orderProduct = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 });
 
-module.exports = { orderProduct };
+const getOrders = asyncHandler(async (req, res) => {
+  const { email, phone } = req.body;
+  if (!email || !phone) {
+    res.status(400);
+    throw new Error("All fields are mandatory");
+  }
+  const userAvailable = await Order.find({ email, phone });
+  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Content-Type", "application/json");
+  const filerItems = userAvailable.map(item => { return { finalPrice: item.finalPrice, products: item.products } });
+  res.status(201).json(filerItems);
+})
+
+module.exports = { orderProduct, getOrders };
