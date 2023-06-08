@@ -58,6 +58,20 @@ export class CartService {
     return this.http.post<any>(this.orderUrl, data, httpOptions);
   }
 
+  getOrderData(data: any): Observable<any[]> {
+    const { email, phone } = data;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+      }),
+      observe: "response" as "response",
+    };
+
+    const body = { email, phone };
+    const url = `${this.orderUrl}orders/`
+    return this.http.post<any[]>(url, body);
+  }
+
   resetCart(): void {
     const resetProperty = 0;
     this.cart.length = resetProperty;
