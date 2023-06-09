@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { Product } from "src/app/Shop";
+import { HistoryOrder } from "src/app/Shop";
 import { CartService } from "src/app/services/cart.service";
 
 @Component({
@@ -8,7 +8,7 @@ import { CartService } from "src/app/services/cart.service";
   templateUrl: "history.component.html",
 })
 export class HistoryComponent implements OnInit {
-  products: Product[] = [];
+  products: HistoryOrder[] = [];
 
   checkoutForm = this.formBuilder.group({
     email: "test@gmail.com",
@@ -27,8 +27,9 @@ export class HistoryComponent implements OnInit {
   onFindOrders(): void {
     console.log(this.checkoutForm.value)
     this.cartService.getOrderData(this.checkoutForm.value).subscribe(
-      (response) => {
+      (response: HistoryOrder[]) => {
         console.log("response", response)
+        this.products = response
       },
       (error) => {
         console.error(

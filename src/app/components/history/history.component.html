@@ -10,7 +10,22 @@
     </div>
     <button type="submit" class="btn">Find your order</button>
   </form>
-  <!-- <div class="cart-data">
+  <div class="cart-data" *ngIf="products.length">
+    <div class="m-b-20" *ngFor="let product of products">
+      <div class="cart">
+        <div class="cart-item" *ngFor="let item of product.products">
+          <img src="https://placehold.co/150x150" alt="">
+          <div class="column column-flex">
+            <div class="title-shop" id="titleShop">Shop: {{ item.shop }}</div>
+            <div class="title-cart" id="titleProduct">Item: {{ item.name }}</div>
+            <div class="price-cart" id="priceProduct">Price: ${{ item.price }}</div>
+            <div>Count: {{ item.count }}</div>
+          </div>
+  
+        </div>
+      </div>
+      <h3 class="title-shop" id="titleShop">Price: ${{ product.finalPrice }}</h3>
+    </div>
 
-  </div> -->
+  </div>
 </div>
