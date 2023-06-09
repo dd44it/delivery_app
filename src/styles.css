@@ -207,10 +207,15 @@ a {
 
 .user-data-form,
 .cart-data {
+  max-height: 70vh;
+}
+
+.user-data-form,
+.cart-data,
+.history-cart {
   padding: 20px;
   border: 1px solid;
   border-radius: 6px;
-  max-height: 70vh;
   overflow-y: auto;
 }
 
@@ -255,8 +260,22 @@ a {
   position: relative;
 }
 
+.history-cart {
+  max-height: 50vh;
+  padding: 30px;
+}
+
+.cart-item {
+  display: flex;
+  gap: 10px;
+  max-width: 300px;
+}
+
 .cart .column {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
 }
 
 .button-remove {
