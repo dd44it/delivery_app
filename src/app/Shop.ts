@@ -12,3 +12,8 @@ export interface Product {
   count: number;
   shop: string;
 }
+
+export interface HistoryOrder {
+  finalPrice: number,
+  products: Product[]
+}
