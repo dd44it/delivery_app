@@ -11,6 +11,7 @@ export class CartComponent implements OnInit {
   products: Product[] = [];
   resultResponse = "";
   finalPrice = 0;
+  userAddress = ''
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -101,5 +102,11 @@ export class CartComponent implements OnInit {
       this.products.splice(findProductIndex, 1);
       this.updateFinalPrice();
     }
+  }
+
+  onShowAddress(e: any): void {
+    const value = e.target.value
+    // console.log(value)
+    this.userAddress = value
   }
 }

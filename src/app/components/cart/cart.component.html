@@ -18,7 +18,7 @@
         </div>
         <div class="form-item">
           <label for="address">Address</label>
-          <input type="text" id="address" class="input" formControlName="address" required>
+          <input type="text" id="address" class="input" formControlName="address" required (blur)="onShowAddress($event)">
         </div>
       </div>
       <div class="cart-data">
@@ -43,7 +43,7 @@
   </form>
   <div class="demo-container">
     <div class="data-container">
-      <app-map class="map" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;"></app-map>
+      <app-map [userAddress]="userAddress" class="map" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;"></app-map>
     </div>
   </div>
   
