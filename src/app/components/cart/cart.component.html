@@ -30,7 +30,8 @@
             <div class="title-shop" id="titleShop">Shop: {{ product.shop }}</div>
             <div class="title-cart" id="titleProduct">Item: {{ product.name }}</div>
             <div class="price-cart" id="priceProduct">Price: ${{ product.price }}</div>
-            <input (change)="onChangeCount(product, $event)" type="number" id="countProduct" class="input" step="any" min="1" value="{{ product.count }}">
+            <input (change)="onChangeCount(product, $event)" type="number" id="countProduct" class="input" step="any"
+              min="1" value="{{ product.count }}">
           </div>
         </div>
       </div>
@@ -40,5 +41,10 @@
       <button class="btn" type="submit" *ngIf="products.length && finalPrice">Submit</button>
     </div>
   </form>
-  <app-map></app-map>
+  <div class="demo-container">
+    <div class="data-container">
+      <app-map class="map" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;"></app-map>
+    </div>
+  </div>
+  
 </div>
