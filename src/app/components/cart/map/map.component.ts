@@ -6,6 +6,7 @@ import {
   AfterViewInit,
 } from "@angular/core";
 import { Browser, Map, map, tileLayer } from "leaflet";
+import { UserLocationService } from "src/app/services/user.location.service";
 
 @Component({
   selector: "app-map",
@@ -13,14 +14,25 @@ import { Browser, Map, map, tileLayer } from "leaflet";
 })
 export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild("map") map: any;
+  location = { lat: 0, lng: 0, }
 
-  constructor(private mapContainer: ElementRef<HTMLElement>) {}
+  constructor(private mapContainer: ElementRef<HTMLElement>, private userLocationService: UserLocationService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const locationLocal = localStorage.getItem('location')
+    if(!locationLocal){
+      this.getUserIpData()
+    }
+    else {
+      this.location = JSON.parse(locationLocal)
+      this.showMap()
+    }
+  }
 
-  ngAfterViewInit() {
-    const initialState = { lng: 11, lat: 49, zoom: 4 };
+  ngAfterViewInit(): void {}
 
+  showMap() {
+    const initialState = { lng: this.location.lng, lat: this.location.lat, zoom: 13 };
     const lefletMap: Map = map(this.mapContainer.nativeElement).setView([initialState.lat, initialState.lng], initialState.zoom);
 
     const isRetina = Browser.retina;
@@ -35,4 +47,20 @@ export class MapComponent implements OnInit, AfterViewInit {
     } as any).addTo(lefletMap);
   
   }
+
+  getUserIpData() {
+    this.userLocationService.getUserLocation().subscribe(
+      (response: any) => {
+        console.log(response)
+        this.location.lat = response.location.latitude
+        this.location.lng = response.location.longitude
+        localStorage.setItem('location', JSON.stringify(this.location))
+        this.showMap()
+      },
+      (error) => { 
+        console.log(error)
+      }, )
+  }
+
+
 }
