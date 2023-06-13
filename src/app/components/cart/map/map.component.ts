@@ -5,19 +5,22 @@ import {
   ElementRef,
   AfterViewInit,
   Input,
-  OnChanges
+  OnChanges,
+  OnDestroy,
 } from "@angular/core";
-import { Browser, Map, map, tileLayer } from "leaflet";
+import { Browser, Map, map, tileLayer, marker, LatLngExpression, icon, LeafletMouseEvent, } from "leaflet";
 import { UserLocationService } from "src/app/services/user.location.service";
 
 @Component({
   selector: "app-map",
   templateUrl: "map.component.html",
 })
-export class MapComponent implements OnInit, AfterViewInit, OnChanges {
+export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild("map") map: any;
   @Input() userAddress: any;
   location = { lat: 0, lng: 0, };
+  leafletMap: Map | undefined | null;
+  userMarker: any;
 
   constructor(private mapContainer: ElementRef<HTMLElement>, private userLocationService: UserLocationService) {}
 
@@ -28,58 +31,91 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     }
     else {
       this.location = JSON.parse(locationLocal);
-      this.showMap('');
+      this.showMap();
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    if (this.location.lat !== 0 && this.location.lng !== 0) {
+      this.showMap();
+    }
+  }
 
   ngOnChanges(): void {
-    console.log(this.userAddress);
-    // this.showMap(this.userAddress);
+    if (this.userAddress) {
+      console.log(this.userAddress);
+      this.changeMapAddress(this.userAddress);
+    }
   }
 
-  showMap(address: string) {
+  ngOnDestroy(): void {
+    if (this.leafletMap) {
+      this.leafletMap.remove();
+    }
+  }
+
+  showMap() {
+    if (this.leafletMap) {
+      this.leafletMap.remove();
+    }
+
     const initialState = { lng: this.location.lng, lat: this.location.lat, zoom: 13 };
-    const lefletMap: Map = map(this.mapContainer.nativeElement).setView([initialState.lat, initialState.lng], initialState.zoom);
+    this.leafletMap = map(this.mapContainer.nativeElement).setView([initialState.lat, initialState.lng], initialState.zoom);
+
+    const key = ''
 
     const isRetina = Browser.retina;
-    const baseUrl = !address ? "https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=8ebfe6cd843e4fda9fd95228aef70023" : address;
-    const retinaUrl = !address ? "https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}@2x.png?apiKey=" : address;
-    const findAddress = `https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&format=json&apiKey=8ebfe6cd843e4fda9fd95228aef70023`
+    const baseUrl = `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${key}`;
+    const retinaUrl = `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}@2x.png?apiKey=${key}`;
 
-    if(address){
-      tileLayer(findAddress, {
-        attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors',
-        apiKey: '8ebfe6cd843e4fda9fd95228aef70023',
-        maxZoom: 20,
-        id: 'osm-bright',
-      } as any)
-    }
-    else {
-      tileLayer(isRetina ? retinaUrl : baseUrl, {
-        attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors',
-        apiKey: '8ebfe6cd843e4fda9fd95228aef70023',
-        maxZoom: 20,
-        id: 'osm-bright',
-      } as any).addTo(lefletMap);
-    }
-  
+    tileLayer(isRetina ? retinaUrl : baseUrl, {
+      attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors',
+      apiKey: key,
+      maxZoom: 20,
+      id: 'osm-bright',
+      iconRetinaUrl: 'assets/marker-icon-2x.png',
+      iconUrl: 'assets/marker-icon-2x.png',
+    } as any).addTo(this.leafletMap);
+
+    this.addUserMarker();
   }
 
   getUserIpData() {
     this.userLocationService.getUserLocation().subscribe(
       (response: any) => {
-        console.log(response)
-        this.location.lat = response.location.latitude
-        this.location.lng = response.location.longitude
-        localStorage.setItem('location', JSON.stringify(this.location))
-        this.showMap('')
+        console.log(response);
+        this.location.lat = response.location.latitude;
+        this.location.lng = response.location.longitude;
+        localStorage.setItem('location', JSON.stringify(this.location));
+        this.showMap();
       },
       (error) => { 
         console.log(error)
       }, )
   }
 
+  changeMapAddress(address: string): void {
+    if(!address.length) return
+    this.userLocationService.getUserAddress(address).subscribe(
+      (response: any) => {
+        console.log(response);
+        this.location.lat = response.results[0].lat;
+        this.location.lng = response.results[0].lon;
+        localStorage.setItem('location', JSON.stringify(this.location));
+        this.showMap();
+      },
+      (error) => { 
+        console.log(error)
+      },)
+  }
+
+  addUserMarker() {
+    const markerOptions = {
+      draggable: true, // Set to true if you want the marker to be draggable
+    };
+
+    const userLatLng: LatLngExpression = [this.location.lat, this.location.lng];
+    this.userMarker = marker(userLatLng, markerOptions).addTo(this.leafletMap as Map);
+  }
 
 }
