@@ -45,4 +45,22 @@ export class UserLocationService {
       })
     );
   }
+
+  getAddressFromLocation(lat: number, lon: number): Observable<any[]> {
+    const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&format=json&apiKey=${this.key}&lang=uk`;
+    return this.http.get<any[]>(url).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = "Unknown error occurred";
+        if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = `Error: ${error.error.message}`;
+        } else {
+          // Server-side error
+          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage);
+      })
+    );
+  }
 }
