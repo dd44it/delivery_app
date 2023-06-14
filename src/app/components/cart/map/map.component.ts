@@ -43,6 +43,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     if (this.location.lat !== 0 && this.location.lng !== 0) {
       this.showMap();
       this.addMapClickEvent();
+      this.addMapDragEvent();
     }
   }
 
@@ -116,29 +117,45 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   addMapClickEvent(): void {
     this.leafletMap!.on('click', (event: LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
-      this.userLocationService.getAddressFromLocation(lat, lng).subscribe(
-        (response: any) => {
-          // console.log(response);
-          const userAddress = response.results[0].address_line1;
-          this.address.emit(userAddress);
-          this.location.lat = response.results[0].lat;
-          this.location.lng = response.results[0].lon;
-          localStorage.setItem('userAddress', userAddress);
-          localStorage.setItem('location', JSON.stringify(this.location));
-          this.updateUserPosition(lat, lng);
-        },
-        (error) => { 
-          console.log(error);
-        },)
+      this.getAddressFromLocation(lat, lng);
     });
+  }
+
+  addMapDragEvent(): void {
+    this.marker!.dragging!.enable();
+    this.marker!.on('dragend', (event: LeafletEvent) => {
+      const markerPosition = event.target.getLatLng();
+      const lat = markerPosition.lat;
+      const lng = markerPosition.lng;
+      this.getAddressFromLocation(lat, lng);
+    });
+  }
+
+  getAddressFromLocation(lat: number, lng: number): void {
+    this.userLocationService.getAddressFromLocation(lat, lng).subscribe(
+      (response: any) => {
+        console.log(response);
+        const userAddress = response.results[0].address_line1;
+        this.address.emit(userAddress);
+        this.location.lat = response.results[0].lat;
+        this.location.lng = response.results[0].lon;
+        localStorage.setItem('userAddress', userAddress);
+        localStorage.setItem('location', JSON.stringify(this.location));
+        this.updateUserPosition(lat, lng);
+      },
+      (error) => { 
+        console.log(error);
+      },
+    )
   }
 
   updateUserPosition(lat: number, lng: number): void {
     if (this.marker) {
-      this.marker.remove();
+      this.marker.setLatLng([lat, lng]);
+    } else {
+      this.marker = createLeafletMarker([lat, lng], {}).addTo(this.leafletMap as Map);
+      this.addMapDragEvent();
     }
-    // Create a marker with the new position
-    this.marker = createLeafletMarker([lat, lng], {}).addTo(this.leafletMap as Map);
   }
 
 }
