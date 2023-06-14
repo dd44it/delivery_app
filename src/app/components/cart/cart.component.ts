@@ -12,7 +12,6 @@ export class CartComponent implements OnInit {
   resultResponse = "";
   finalPrice = 0;
   userAddress = '';
-  pickUserAddress = '';
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -37,7 +36,7 @@ export class CartComponent implements OnInit {
       this.products = this.cartService.getCart();
     }
     if(localStorageUserAddress) {
-      this.pickUserAddress = localStorageUserAddress;
+      this.checkoutForm.patchValue({ address: localStorageUserAddress });
     }
     this.updateFinalPrice();
   }
@@ -116,7 +115,7 @@ export class CartComponent implements OnInit {
   }
 
   handleAddressSelected(address: string): void {
-    this.pickUserAddress = address;
+    this.checkoutForm.patchValue({ address: address });
   }
 
 }
