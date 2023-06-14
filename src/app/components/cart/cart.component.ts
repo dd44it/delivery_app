@@ -11,7 +11,8 @@ export class CartComponent implements OnInit {
   products: Product[] = [];
   resultResponse = "";
   finalPrice = 0;
-  userAddress = ''
+  userAddress = '';
+  pickUserAddress = '';
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -29,10 +30,14 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     const localStorageCart = localStorage.getItem("cart");
+    const localStorageUserAddress = localStorage.getItem("userAddress");
     if (localStorageCart) {
       this.products = JSON.parse(localStorageCart);
     } else {
       this.products = this.cartService.getCart();
+    }
+    if(localStorageUserAddress) {
+      this.pickUserAddress = localStorageUserAddress;
     }
     this.updateFinalPrice();
   }
@@ -109,4 +114,9 @@ export class CartComponent implements OnInit {
     // console.log(value)
     this.userAddress = value
   }
+
+  handleAddressSelected(address: string): void {
+    this.pickUserAddress = address;
+  }
+
 }

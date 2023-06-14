@@ -5,11 +5,14 @@ import {
   ElementRef,
   AfterViewInit,
   Input,
+  Output,
   OnChanges,
   OnDestroy,
+  EventEmitter,
 } from "@angular/core";
-import { Browser, Map, map, tileLayer, marker, LatLngExpression, icon, LeafletMouseEvent, } from "leaflet";
+import { Browser, Map, map, tileLayer, marker, LatLngExpression, icon, LeafletMouseEvent, Marker, LeafletEvent } from "leaflet";
 import { UserLocationService } from "src/app/services/user.location.service";
+import { createLeafletMarker } from "src/app/LeafletMarker";
 
 @Component({
   selector: "app-map",
@@ -20,7 +23,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   @Input() userAddress: any;
   location = { lat: 0, lng: 0, };
   leafletMap: Map | undefined | null;
-  userMarker: any;
+  @Output() address: EventEmitter<string> = new EventEmitter<string>();
+  marker?: Marker;
 
   constructor(private mapContainer: ElementRef<HTMLElement>, private userLocationService: UserLocationService) {}
 
@@ -38,6 +42,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   ngAfterViewInit(): void {
     if (this.location.lat !== 0 && this.location.lng !== 0) {
       this.showMap();
+      this.addMapClickEvent();
     }
   }
 
@@ -45,6 +50,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     if (this.userAddress) {
       console.log(this.userAddress);
       this.changeMapAddress(this.userAddress);
+      this.updateUserPosition(this.location.lat, this.location.lng);
     }
   }
 
@@ -59,7 +65,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
       this.leafletMap.remove();
     }
 
-    const initialState = { lng: this.location.lng, lat: this.location.lat, zoom: 13 };
+    const initialState = { lng: this.location.lng, lat: this.location.lat, zoom: 17 };
     this.leafletMap = map(this.mapContainer.nativeElement).setView([initialState.lat, initialState.lng], initialState.zoom);
 
     const key = ''
@@ -73,11 +79,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
       apiKey: key,
       maxZoom: 20,
       id: 'osm-bright',
-      iconRetinaUrl: 'assets/marker-icon-2x.png',
-      iconUrl: 'assets/marker-icon-2x.png',
     } as any).addTo(this.leafletMap);
 
-    this.addUserMarker();
+    this.marker = createLeafletMarker([initialState.lat, initialState.lng], {}).addTo(this.leafletMap as Map);
   }
 
   getUserIpData() {
@@ -109,13 +113,32 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
       },)
   }
 
-  addUserMarker() {
-    const markerOptions = {
-      draggable: true, // Set to true if you want the marker to be draggable
-    };
+  addMapClickEvent(): void {
+    this.leafletMap!.on('click', (event: LeafletMouseEvent) => {
+      const { lat, lng } = event.latlng;
+      this.userLocationService.getAddressFromLocation(lat, lng).subscribe(
+        (response: any) => {
+          // console.log(response);
+          const userAddress = response.results[0].address_line1;
+          this.address.emit(userAddress);
+          this.location.lat = response.results[0].lat;
+          this.location.lng = response.results[0].lon;
+          localStorage.setItem('userAddress', userAddress);
+          localStorage.setItem('location', JSON.stringify(this.location));
+          this.updateUserPosition(lat, lng);
+        },
+        (error) => { 
+          console.log(error);
+        },)
+    });
+  }
 
-    const userLatLng: LatLngExpression = [this.location.lat, this.location.lng];
-    this.userMarker = marker(userLatLng, markerOptions).addTo(this.leafletMap as Map);
+  updateUserPosition(lat: number, lng: number): void {
+    if (this.marker) {
+      this.marker.remove();
+    }
+    // Create a marker with the new position
+    this.marker = createLeafletMarker([lat, lng], {}).addTo(this.leafletMap as Map);
   }
 
 }
