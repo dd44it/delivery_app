@@ -17,3 +17,8 @@ export interface HistoryOrder {
   finalPrice: number,
   products: Product[]
 }
+
+export interface Coupon {
+  shop_id: string;
+  coupon_code: string;
+}
