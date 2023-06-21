@@ -41,7 +41,7 @@
       <button class="btn" type="submit" *ngIf="products.length && finalPrice">Submit</button>
     </div>
   </form>
-  <div class="demo-container">
+  <div *ngIf="!resultResponse && products.length" class="demo-container">
     <div class="data-container">
       <app-map [userAddress]="userAddress" (address)="handleAddressSelected($event)" class="map" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;"></app-map>
     </div>
