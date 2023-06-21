@@ -1,4 +1,15 @@
 <div class="container">
-  <div *ngIf="resultResponse"> {{ resultResponse }} </div>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="!coupons.length">Currently coupons list is empty.</div>
+  <div *ngIf="!error && coupons.length" class="products">
+    <div class="m-b-20" *ngFor="let coupon of coupons">
+      <div class="cart-product">
+        <img src="https://placehold.co/150x150" alt="">
+        <div class="title-shop" id="titleShop">Shop: {{ coupon.shop }}</div>
+        <div class="title-cart" id="titleProduct">Code: {{ coupon.coupon_code }}</div>
+        <button (click)="onCopyCode(coupon.coupon_code)" class="btn">Copy code</button>
+      </div>
+    </div>
+  </div>
 
 </div>
