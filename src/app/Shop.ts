@@ -20,5 +20,7 @@ export interface HistoryOrder {
 
 export interface Coupon {
   shop_id: string;
+  shop: string;
   coupon_code: string;
+  count: number;
 }
