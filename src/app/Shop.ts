@@ -23,4 +23,5 @@ export interface Coupon {
   shop: string;
   coupon_code: string;
   count: number;
+  percent: number;
 }
