@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { Product } from "src/app/Shop";
 import { CartService } from "src/app/services/cart.service";
+import { CouponService } from "src/app/services/coupon.service";
 
 @Component({
   selector: "app-cart",
@@ -12,6 +13,8 @@ export class CartComponent implements OnInit {
   resultResponse = "";
   finalPrice = 0;
   userAddress = '';
+  couponShop = '';
+  couponPercent = '';
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -24,7 +27,8 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private couponService: CouponService
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +120,22 @@ export class CartComponent implements OnInit {
 
   handleAddressSelected(address: string): void {
     this.checkoutForm.patchValue({ address: address });
+  }
+
+  onAddCoupon(event: any): void {
+    const value = event.target.value
+    if(!value.length) return
+    this.couponService.getCoupon(value).subscribe(
+      (response) => {
+        if(!response.data) return
+        this.couponShop = response.coupon.shop 
+        this.couponPercent = response.coupon.percent
+      },
+      (error) => {
+        console.error("Error occurred while get data to MongoDB. Error:", error);
+      }
+    );
+    
   }
 
 }
