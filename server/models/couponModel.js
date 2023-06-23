@@ -12,6 +12,10 @@ const couponSchema = new mongoose.Schema({
   count: {
     type: Number,
     required: true,
+  },
+  percent: {
+    type: Number,
+    required: true,
   }
 });
 
