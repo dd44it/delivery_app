@@ -15,6 +15,7 @@ export class CartComponent implements OnInit {
   userAddress = '';
   couponShop = '';
   couponPercent = '';
+  isCorrectCoupon = false;
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -90,12 +91,19 @@ export class CartComponent implements OnInit {
   }
 
   updateFinalPrice(): void {
-    const countProduct = this.products.length && this.products.reduce((prevVal, curVal) => prevVal + curVal.count,0);
-    console.log("countProduct", countProduct);
+    if(!this.products.length) return;
+    const countProduct = this.products.reduce((prevVal, curVal) => prevVal + curVal.count,0);
     this.finalPrice = this.products
       ?.map((product) => product.count * product.price)
       .map((product) => (product < 0 ? -1 * product : product))
       .reduce((prevVal, curVal) => prevVal + curVal, 0);
+
+    const firstShop = this.products[0].shop;
+    const checkProduct = this.products.every(product => product.shop === firstShop);
+    this.isCorrectCoupon = firstShop === this.couponShop
+    if(this.isCorrectCoupon && checkProduct && this.couponPercent){
+      this.finalPrice = this.finalPrice - (this.finalPrice * (+this.couponPercent / 100));
+    }
 
     this.cartService.setToLocalStorage("cart", JSON.stringify(this.products));
     this.cartService.setToLocalStorage("count", countProduct.toString());
@@ -114,7 +122,6 @@ export class CartComponent implements OnInit {
 
   onShowAddress(e: any): void {
     const value = e.target.value
-    // console.log(value)
     this.userAddress = value
   }
 
@@ -123,13 +130,14 @@ export class CartComponent implements OnInit {
   }
 
   onAddCoupon(event: any): void {
-    const value = event.target.value
-    if(!value.length) return
+    const value = event.target.value;
+    if(!value.length) return;
     this.couponService.getCoupon(value).subscribe(
       (response) => {
-        if(!response.data) return
-        this.couponShop = response.coupon.shop 
-        this.couponPercent = response.coupon.percent
+        if(!response.data) return;
+        this.couponShop = response.coupon.shop;
+        this.couponPercent = response.coupon.percent;
+        this.updateFinalPrice();
       },
       (error) => {
         console.error("Error occurred while get data to MongoDB. Error:", error);

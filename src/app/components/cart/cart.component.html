@@ -1,6 +1,6 @@
 <div class="container">
   <div *ngIf="resultResponse"> {{ resultResponse }} </div>
-  <form [formGroup]="checkoutForm" *ngIf="!resultResponse" (ngSubmit)="onSubmit()">
+  <form [formGroup]="checkoutForm" *ngIf="!resultResponse" (keydown.enter)="$event.preventDefault()" (ngSubmit)="onSubmit()">
 
     <div class="cart-wrapper">
       <div *ngIf="products.length" class="user-data-form form">
@@ -36,14 +36,14 @@
         </div>
       </div>
     </div>
-    <div class="row m-t-20 m-b-20 price-wrapper">
+    <div *ngIf="products.length" class="row m-t-20 m-b-20 price-wrapper">
       <div class="form-item">
         <label for="coupon">Coupon</label>
-        <input type="text" class="input" (change)="onAddCoupon($event)">
-        <span *ngIf="couponShop">{{ couponShop }}</span>
+        <input type="text" class="input" (input)="onAddCoupon($event)" (keydown.enter)="onAddCoupon($event)">
+        <span *ngIf="isCorrectCoupon && couponShop">{{ couponShop }}</span>
       </div>
       <h3 *ngIf="finalPrice">Total price: {{ finalPrice }} </h3>
-      <button class="btn" type="submit" *ngIf="products.length && finalPrice">Submit</button>
+      <button class="btn" type="submit" *ngIf="finalPrice">Submit</button>
     </div>
   </form>
   <div *ngIf="!resultResponse && products.length" class="demo-container">
