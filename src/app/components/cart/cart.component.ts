@@ -13,6 +13,7 @@ export class CartComponent implements OnInit {
   resultResponse = "";
   finalPrice = 0;
   userAddress = '';
+  couponCode = '';
   couponShop = '';
   couponPercent = '';
   isCorrectCoupon = false;
@@ -77,6 +78,13 @@ export class CartComponent implements OnInit {
         this.cartService.resetCart();
       }
     );
+
+    if(!this.couponCode) return;
+    this.updateCountCouponCode();
+  }
+
+  updateCountCouponCode(): void {
+    this.couponService.updateSelectedCouponCode(this.couponCode).subscribe();
   }
 
   onChangeCount(product: Product, element: any): void {
@@ -131,8 +139,14 @@ export class CartComponent implements OnInit {
 
   onAddCoupon(event: any): void {
     const value = event.target.value;
-    if(!value.length) return;
-    this.couponService.getCoupon(value).subscribe(
+    if(!value.length) {
+      this.couponShop = '';
+      this.couponPercent = '';
+      this.updateFinalPrice();
+      return;
+    }
+    this.couponCode = value;
+    this.couponService.getCoupon(this.couponCode).subscribe(
       (response) => {
         if(!response.data) return;
         this.couponShop = response.coupon.shop;

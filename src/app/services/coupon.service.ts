@@ -46,4 +46,22 @@ export class CouponService {
       })
     ); 
   }
+
+  updateSelectedCouponCode(id: string): Observable<any>{
+    const url = `${this.apiURL}/${id}`
+    return this.http.put<Coupon[]>(url, id).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = "Unknown error occurred";
+        if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = `Error: ${error.error.message}`;
+        } else {
+          // Server-side error
+          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage);
+      })
+    ); 
+  }
 }
