@@ -1,18 +1,19 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
 import { Observable, throwError, catchError } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class UserLocationService {
-  private key = ''
-  private apiURL =`https://api.geoapify.com/v1/ipinfo?apiKey=${this.key}`;
+  private netlifyURLMap = '/.netlify/functions/fetch-map'
+  private netlifyURLUserAddress = '/.netlify/functions/fetch-user-address'
+  private netlifyURLAddressFromLocation = '/.netlify/functions/fetch-address-from-location'
 
   constructor(private http: HttpClient) {}
 
   getUserLocation(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiURL).pipe(
+    return this.http.get<any[]>(this.netlifyURLMap).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = "Unknown error occurred";
         if (error.error instanceof ErrorEvent) {
@@ -29,8 +30,11 @@ export class UserLocationService {
   }
 
   getUserAddress(address: string): Observable<any[]> {
-    const url = `https://api.geoapify.com/v1/geocode/search?text=${address}&format=json&apiKey=${this.key}`;
-    return this.http.get<any[]>(url).pipe(
+    let params = new HttpParams()
+    params = params.append('address', address)
+    const baseUrl = window.location.origin
+    const url = `${baseUrl}${this.netlifyURLUserAddress}`
+    return this.http.get<any[]>(url, { params }).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = "Unknown error occurred";
         if (error.error instanceof ErrorEvent) {
@@ -47,8 +51,12 @@ export class UserLocationService {
   }
 
   getAddressFromLocation(lat: number, lon: number): Observable<any[]> {
-    const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&format=json&apiKey=${this.key}&lang=uk`;
-    return this.http.get<any[]>(url).pipe(
+    let params = new HttpParams()
+    params = params.append('lat', lat)
+    params = params.append('lon', lon)
+    const baseUrl = window.location.origin
+    const url = `${baseUrl}${this.netlifyURLAddressFromLocation}`
+    return this.http.get<any[]>(url, { params }).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = "Unknown error occurred";
         if (error.error instanceof ErrorEvent) {
