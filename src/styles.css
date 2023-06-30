@@ -19,7 +19,7 @@ html, body, app-root {
 }
 
 body {
-  font-family: sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 1rem;
   background-color: var(--background);
   /* overflow-y: hidden; */
