@@ -3,6 +3,7 @@ import { FormBuilder } from "@angular/forms";
 import { Product } from "src/app/Shop";
 import { CartService } from "src/app/services/cart.service";
 import { CouponService } from "src/app/services/coupon.service";
+import { UserLocationService } from "src/app/services/user.location.service";
 
 @Component({
   selector: "app-cart",
@@ -17,6 +18,7 @@ export class CartComponent implements OnInit {
   couponShop = '';
   couponPercent = '';
   isCorrectCoupon = false;
+  addressOptions: string[] = [];
 
   checkoutForm = this.formBuilder.group({
     name: "",
@@ -30,7 +32,8 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private formBuilder: FormBuilder,
-    private couponService: CouponService
+    private couponService: CouponService,
+    private userService: UserLocationService,
   ) {}
 
   ngOnInit(): void {
@@ -130,11 +133,23 @@ export class CartComponent implements OnInit {
 
   onShowAddress(e: any): void {
     const value = e.target.value
+    if (value.length < 4) return
     this.userAddress = value
+    this.userService.getAutoCompleteAddress(this.userAddress).subscribe(
+      (response: any) => {
+        // console.log(response)
+        this.addressOptions = Array.isArray(response.results) && response.results.map( (item: any) => item.formatted);
+      },
+      (error) => {
+        console.error("Error occurred while get data to MongoDB. Error:", error);
+      }
+    )
+
   }
 
   handleAddressSelected(address: string): void {
     this.checkoutForm.patchValue({ address: address });
+    this.userAddress = address;
   }
 
   onAddCoupon(event: any): void {
