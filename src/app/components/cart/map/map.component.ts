@@ -68,19 +68,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
 
     const initialState = { lng: this.location.lng, lat: this.location.lat, zoom: 17 };
     this.leafletMap = map(this.mapContainer.nativeElement).setView([initialState.lat, initialState.lng], initialState.zoom);
-
-    const key = ''
-
-    const isRetina = Browser.retina;
-    const baseUrl = `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${key}`;
-    const retinaUrl = `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}@2x.png?apiKey=${key}`;
-
-    tileLayer(isRetina ? retinaUrl : baseUrl, {
+    const tileLayerUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    tileLayer(tileLayerUrl, {
       attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors',
-      apiKey: key,
       maxZoom: 20,
       id: 'osm-bright',
-    } as any).addTo(this.leafletMap);
+    } as any).addTo(this.leafletMap as Map);
 
     this.marker = createLeafletMarker([initialState.lat, initialState.lng], {}).addTo(this.leafletMap as Map);
   }
@@ -115,10 +108,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   }
 
   addMapClickEvent(): void {
-    this.leafletMap!.on('click', (event: LeafletMouseEvent) => {
-      const { lat, lng } = event.latlng;
-      this.getAddressFromLocation(lat, lng);
-    });
+    if(this.leafletMap){
+      this.leafletMap.on('click', (event: LeafletMouseEvent) => {
+        const { lat, lng } = event.latlng;
+        this.getAddressFromLocation(lat, lng);
+      });
+    } 
   }
 
   addMapDragEvent(): void {
