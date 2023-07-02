@@ -21,7 +21,7 @@ import { createLeafletMarker } from "src/app/LeafletMarker";
 export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild("map") map: any;
   @Input() userAddress: any;
-  location = { lat: 0, lng: 0, };
+  @Input() location = {lat: 0, lng: 0};
   leafletMap: Map | undefined | null;
   @Output() address: EventEmitter<string> = new EventEmitter<string>();
   marker?: Marker;
@@ -49,9 +49,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
 
   ngOnChanges(): void {
     if (this.userAddress) {
-      console.log(this.userAddress);
-      this.changeMapAddress(this.userAddress);
       this.updateUserPosition(this.location.lat, this.location.lng);
+      this.changeMapAddress(this.userAddress);
     }
   }
 
@@ -96,10 +95,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     if(!address.length) return
     this.userLocationService.getUserAddress(address).subscribe(
       (response: any) => {
-        console.log(response);
         this.location.lat = response.results[0].lat;
         this.location.lng = response.results[0].lon;
         localStorage.setItem('location', JSON.stringify(this.location));
+        localStorage.setItem('userAddress', address);
         this.showMap();
       },
       (error) => { 
@@ -129,7 +128,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   getAddressFromLocation(lat: number, lng: number): void {
     this.userLocationService.getAddressFromLocation(lat, lng).subscribe(
       (response: any) => {
-        console.log(response);
         const userAddress = response.results[0].address_line1;
         this.address.emit(userAddress);
         this.location.lat = response.results[0].lat;

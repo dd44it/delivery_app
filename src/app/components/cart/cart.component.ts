@@ -14,6 +14,7 @@ export class CartComponent implements OnInit {
   resultResponse = "";
   finalPrice = 0;
   userAddress = '';
+  location = {lat: 0, lon: 0};
   couponCode = '';
   couponShop = '';
   couponPercent = '';
@@ -137,8 +138,11 @@ export class CartComponent implements OnInit {
     this.userAddress = value
     this.userService.getAutoCompleteAddress(this.userAddress).subscribe(
       (response: any) => {
-        // console.log(response)
-        this.addressOptions = Array.isArray(response.results) && response.results.map( (item: any) => item.formatted);
+        console.log(response)
+        if(Array.isArray(response.results) && response.results.length){
+          this.location = { lat: response.results[0].lat, lon: response.results[0].lon };
+          this.addressOptions = response.results.map( (item: any) => item.formatted);
+        }
       },
       (error) => {
         console.error("Error occurred while get data to MongoDB. Error:", error);
