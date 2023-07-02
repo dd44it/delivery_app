@@ -297,6 +297,11 @@ a {
   z-index: 1;
 }
 
+.form-item {
+  display: flex;
+  flex-direction: column;
+}
+
 /* .cart-row {
   display: flex;
 } */
