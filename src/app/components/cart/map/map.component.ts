@@ -24,18 +24,28 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   @Input() location = {lat: 0, lng: 0};
   leafletMap: Map | undefined | null;
   @Output() address: EventEmitter<string> = new EventEmitter<string>();
+  @Output() userCity: EventEmitter<string> = new EventEmitter<string>();
+  userCityLocal = '';
   marker?: Marker;
 
   constructor(private mapContainer: ElementRef<HTMLElement>, private userLocationService: UserLocationService) {}
 
   ngOnInit() {
     const locationLocal = localStorage.getItem('location');
+    const cityLocal = localStorage.getItem('city');
     if(!locationLocal){
       this.getUserIpData();
     }
     else {
       this.location = JSON.parse(locationLocal);
       this.showMap();
+    }
+    if(cityLocal){
+      this.userCity.emit(cityLocal);
+      this.userCityLocal = cityLocal;
+    }
+    else {
+      this.getUserIpData();
     }
   }
 
@@ -81,6 +91,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     this.userLocationService.getUserLocation().subscribe(
       (response: any) => {
         console.log(response);
+        this.userCity.emit(response.city.name);
+        this.userCityLocal = response.city.name;
+        localStorage.setItem('city', response.city.name);
         this.location.lat = response.location.latitude;
         this.location.lng = response.location.longitude;
         localStorage.setItem('location', JSON.stringify(this.location));
@@ -95,6 +108,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     if(!address.length) return
     this.userLocationService.getUserAddress(address).subscribe(
       (response: any) => {
+        if(!Array.isArray(response.results) || !response.results.length) return;
         this.location.lat = response.results[0].lat;
         this.location.lng = response.results[0].lon;
         localStorage.setItem('location', JSON.stringify(this.location));
@@ -116,8 +130,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   }
 
   addMapDragEvent(): void {
-    this.marker!.dragging!.enable();
-    this.marker!.on('dragend', (event: LeafletEvent) => {
+    this.marker?.dragging!.enable();
+    this.marker?.on('dragend', (event: LeafletEvent) => {
       const markerPosition = event.target.getLatLng();
       const lat = markerPosition.lat;
       const lng = markerPosition.lng;
@@ -128,8 +142,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   getAddressFromLocation(lat: number, lng: number): void {
     this.userLocationService.getAddressFromLocation(lat, lng).subscribe(
       (response: any) => {
+        console.log(response);
         const userAddress = response.results[0].address_line1;
         this.address.emit(userAddress);
+        const cityLocal = localStorage.getItem('city');
+        if(cityLocal){
+          this.userCity.emit(cityLocal);
+        }
+        else {
+          this.userCity.emit(this.userCityLocal);
+        }
         this.location.lat = response.results[0].lat;
         this.location.lng = response.results[0].lon;
         localStorage.setItem('userAddress', userAddress);

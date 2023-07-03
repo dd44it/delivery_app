@@ -1,9 +1,9 @@
 const axios = require('axios')
 
 const handler = async (event) => {
-  const { userAddress } = event.queryStringParameters;
+  const { userAddress, userCity } = event.queryStringParameters;
   const API_SECRET = process.env.API_MAP;
-  const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${userAddress}&format=json&apiKey=${API_SECRET}`
+  const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${userAddress}&filter=city&filter_values=${userCity}&format=json&apiKey=${API_SECRET}`
   try {
     const { data } = await axios.get(url);
     return {

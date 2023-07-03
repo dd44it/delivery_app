@@ -14,6 +14,7 @@ export class CartComponent implements OnInit {
   resultResponse = "";
   finalPrice = 0;
   userAddress = '';
+  userCity = '';
   location = {lat: 0, lon: 0};
   couponCode = '';
   couponShop = '';
@@ -136,7 +137,11 @@ export class CartComponent implements OnInit {
     const value = e.target.value
     if (value.length < 4) return
     this.userAddress = value
-    this.userService.getAutoCompleteAddress(this.userAddress).subscribe(
+    const cityLocal = localStorage.getItem('city');
+    if(cityLocal){
+      this.userCity = cityLocal; 
+    }
+    this.userService.getAutoCompleteAddress(this.userAddress, this.userCity).subscribe(
       (response: any) => {
         console.log(response)
         if(Array.isArray(response.results) && response.results.length){
