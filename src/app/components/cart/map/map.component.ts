@@ -23,8 +23,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   @Input() userAddress: any;
   @Input() location = {lat: 0, lng: 0};
   leafletMap: Map | undefined | null;
-  @Output() address: EventEmitter<string> = new EventEmitter<string>();
-  @Output() userCity: EventEmitter<string> = new EventEmitter<string>();
+  @Output() address = new EventEmitter<string>();
+  @Output() userCity = new EventEmitter<string>();
   userCityLocal = '';
   marker?: Marker;
 
@@ -61,6 +61,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     if (this.userAddress) {
       this.updateUserPosition(this.location.lat, this.location.lng);
       this.changeMapAddress(this.userAddress);
+      this.userCity.emit(this.userCityLocal);
     }
   }
 
@@ -145,6 +146,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
         console.log(response);
         const userAddress = response.results[0].address_line1;
         this.address.emit(userAddress);
+
+        this.userCity.emit(response.results.city);
         const cityLocal = localStorage.getItem('city');
         if(cityLocal){
           this.userCity.emit(cityLocal);
