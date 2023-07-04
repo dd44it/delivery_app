@@ -55,7 +55,7 @@
   </form>
   <div *ngIf="!resultResponse && products.length" class="demo-container">
     <div class="data-container">
-      <app-map [userAddress]="userAddress" (userCity)="receiveData($event)" (address)="handleAddressSelected($event)" class="map" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;"></app-map>
+      <app-map [userAddress]="userAddress" (userCity)="receiveData($event)" (address)="handleAddressSelected($event)" class="map"></app-map>
     </div>
   </div>
   
