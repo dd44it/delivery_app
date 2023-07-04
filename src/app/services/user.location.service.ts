@@ -73,10 +73,9 @@ export class UserLocationService {
     );
   }
 
-  getAutoCompleteAddress(userAddress: string, userCity: string): Observable<any[]> {
+  getAutoCompleteAddress(userAddress: string): Observable<any[]> {
     let params = new HttpParams();
     params = params.append('userAddress', userAddress);
-    params = params.append('userCity', userCity);
     const baseUrl = window.location.origin;
     const url = `${baseUrl}${this.netlifyURLAutoCompleteAddress}`;
     return this.http.get<any[]>(url, { params }).pipe(
