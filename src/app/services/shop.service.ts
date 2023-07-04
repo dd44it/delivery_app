@@ -9,7 +9,8 @@ import { Shop } from "../Shop";
   providedIn: "root",
 })
 export class ShopService {
-  private apiURL = "http://localhost:5000/api/shops";
+  // private apiURL = "http://localhost:5000/api/shops";
+  private apiURL = "/.netlify/functions/fetch-shops";
 
   constructor(private http: HttpClient) {}
 
