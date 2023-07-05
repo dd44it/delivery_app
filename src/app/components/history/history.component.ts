@@ -11,8 +11,8 @@ export class HistoryComponent implements OnInit {
   products: HistoryOrder[] = [];
 
   checkoutForm = this.formBuilder.group({
-    email: "test@gmail.com",
-    phone: "333333",
+    email: "",
+    phone: "",
   });
 
   constructor(
