@@ -1,10 +1,7 @@
 const axios = require('axios')
 
 const handler = async (event) => {
-  console.log(event.queryStringParameters)
   const { lat, lon } = event.queryStringParameters;
-  console.log(lat, lon)
-  console.log(typeof lat, typeof lon)
   const API_SECRET = process.env.API_MAP;
   const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${+lat}&lon=${+lon}&format=json&apiKey=${API_SECRET}&lang=uk`;
 
