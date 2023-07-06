@@ -10,7 +10,7 @@
     </div>
     <button type="submit" class="btn">Find your order</button>
   </form>
-  <div class="cart-data" *ngIf="products.length">
+  <div class="cart-data" *ngIf="products.length && !emptyOrder">
     <div class="m-b-20" *ngFor="let product of products">
       <div class="cart">
         <div class="cart-item" *ngFor="let item of product.products">
@@ -28,4 +28,7 @@
     </div>
 
   </div>
+
+  <h3 *ngIf="emptyOrder" class="text-center"> {{ emptyOrder }} </h3>
+  
 </div>

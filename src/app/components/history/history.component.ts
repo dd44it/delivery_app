@@ -9,6 +9,7 @@ import { CartService } from "src/app/services/cart.service";
 })
 export class HistoryComponent implements OnInit {
   products: HistoryOrder[] = [];
+  emptyOrder = '';
 
   checkoutForm = this.formBuilder.group({
     email: "",
@@ -25,11 +26,13 @@ export class HistoryComponent implements OnInit {
   }
 
   onFindOrders(): void {
-    console.log(this.checkoutForm.value)
     this.cartService.getOrderData(this.checkoutForm.value).subscribe(
       (response: HistoryOrder[]) => {
-        console.log("response", response)
-        this.products = response
+        if(!response.length){
+          this.emptyOrder = 'No order found';
+          return;
+        }
+        this.products = response;
       },
       (error) => {
         console.error(
