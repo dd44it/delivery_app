@@ -13,6 +13,7 @@ export class CartService {
   // private orderUrl = "http://localhost:5000/api/order/";
   // netlify url
   private orderUrl = "/.netlify/functions/fetch-order";
+  private getOrdersUrl = "/.netlify/functions/fetch-get-orders";
 
   constructor(private http: HttpClient) {}
 
@@ -62,6 +63,30 @@ export class CartService {
     params = params.append('finalPrice', finalPrice);
 
     return this.http.get<any>(this.orderUrl, { params } ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = "Unknown error occurred";
+        if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = `Error: ${error.error.message}`;
+        } else {
+          // Server-side error
+          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
+        console.error(errorMessage);
+        return throwError(errorMessage);
+      })
+    );
+  }
+
+  // get order from netlify function
+  getOrderData(data: any): Observable<any[]> {
+    const { email, phone } = data;
+    console.log(email, phone)
+    let params = new HttpParams();
+    params = params.append('email', email);
+    params = params.append('phone', phone);
+
+    return this.http.get<any>(this.getOrdersUrl, { params }).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = "Unknown error occurred";
         if (error.error instanceof ErrorEvent) {
