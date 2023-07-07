@@ -1,5 +1,23 @@
-const { productSchema } = require("./shopModel");
 const mongoose = require("mongoose");
+
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  count: {
+    type: Number,
+    required: true,
+  },
+  shop: {
+    type: String,
+    required: true,
+  },
+});
 
 const orderSchema = new mongoose.Schema({
   name: {
