@@ -14,7 +14,8 @@
     <section class="products">
       <div *ngFor="let product of products" class="cart-product">
         <div class="cart-image">
-          <img class="image" src="https://placehold.co/400x500" alt="product-image">
+          <!-- <img class="image" src="https://placehold.co/400x500" alt="product-image"> -->
+          <img class="image" [src]="product.image_url" alt="product-image">
         </div>
         <div class="row space-between">
           <h4 class="title">{{ product.name }}</h4>

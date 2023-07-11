@@ -11,6 +11,7 @@ export interface Product {
   price: number;
   count: number;
   shop: string;
+  image_url: string;
 }
 
 export interface HistoryOrder {
