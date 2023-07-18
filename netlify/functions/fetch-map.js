@@ -2,10 +2,10 @@ const axios = require('axios')
 
 const handler = async (event) => {
   const API_SECRET = process.env.API_MAP;
-  const userIp = event.headers['client-ip'];
+  const userIp = event.headers['x-real-ip'] || event.headers['x-forwarded-for'] || '';
   let url =`https://api.geoapify.com/v1/ipinfo?apiKey=${API_SECRET}`;
-
-  if(userIp !== '127.0.0.1'){
+  
+  if(userIp !== "::ffff:127.0.0.1"){
     url +=`&ip=${userIp}`;
   }
 
