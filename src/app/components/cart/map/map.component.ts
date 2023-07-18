@@ -51,9 +51,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
 
   ngAfterViewInit(): void {
     if (this.location.lat !== 0 && this.location.lng !== 0) {
-      this.showMap();
-      this.addMapClickEvent();
-      this.addMapDragEvent();
+      this.showMap(); 
     }
   }
 
@@ -86,6 +84,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
     } as any).addTo(this.leafletMap as Map);
 
     this.marker = createLeafletMarker([initialState.lat, initialState.lng], {}).addTo(this.leafletMap as Map);
+   
+    this.addMapDragEvent();
+    this.addMapClickEvent();
   }
 
   getUserIpData() {
@@ -143,7 +144,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy
   getAddressFromLocation(lat: number, lng: number): void {
     this.userLocationService.getAddressFromLocation(lat, lng).subscribe(
       (response: any) => {
-        console.log(response);
+        // console.log(response);
         const userAddress = response.results[0].address_line1;
         this.address.emit(userAddress);
 
