@@ -28,6 +28,7 @@
     "mapbox-gl-leaflet": "^0.0.16",
     "mongoose": "^7.3.1",
     "rxjs": "~7.8.0",
+    "semver": "^7.5.4",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },
